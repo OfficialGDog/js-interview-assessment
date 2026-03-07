@@ -41,28 +41,26 @@ function App() {
 
   const handleSwap = () => {
     setConverter((prev) => ({
+      ...prev,
       fromCurrency: prev.toCurrency,
-      toCurrency: prev.fromCurrency,
-      fromAmount: prev.toAmount,
-      toAmount: prev.fromAmount,
+      toCurrency: prev.fromCurrency
     }));
   };
 
   useEffect(() => {
-    if (loading) return;
-
     const { fromCurrency, toCurrency, fromAmount } = prevFiltersRef.current;
     const { fromCurrency: newFrom, toCurrency: newTo, fromAmount: newAmount } = debouncedFilters;
 
-    if (fromCurrency === newFrom && toCurrency === newTo && fromAmount === newAmount) return;
+    if (!loading && fromCurrency === newFrom && toCurrency === newTo && fromAmount === newAmount) return;
 
     const fetchConversion = async () => {
       const { result } = await useCurrencyConversion(newFrom, newTo, newAmount);
-      setConverter((prev) => ({ ...prev, toAmount: Number(result.toFixed(2)) }));
+      setConverter((prev) => ({ ...prev, toAmount: result.toFixed(2) }));
+      prevFiltersRef.current = debouncedFilters;
     };
 
     fetchConversion();
-    prevFiltersRef.current = debouncedFilters;
+
   }, [debouncedFilters, loading]);
 
   return (

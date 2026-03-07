@@ -20,7 +20,7 @@ type ConvertAPIResponse = {
 const useCurrencyConversion = async (
   from: string,
   to: string,
-  amount: number,
+  amount: string | number,
 ): Promise<ConversionResult> => {
   try {
     const response = await fetch(

@@ -3,7 +3,7 @@ import { NumberInput } from "@carbon/react";
 interface CurrencyInputProps {
   id: string;
   label: string;
-  value: number;
+  value: string | number;
   onChange: (id: string, value: number) => void;
 }
 
