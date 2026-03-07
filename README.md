@@ -2,6 +2,7 @@
 
 ## About
 A simple currency conversion tool
+Note: The API key is included for convenience so the project runs immediately, in a production app I wouldn't commit environment variables.
 
 **Features**:
 * Users can input an amount for the “from” currency.
