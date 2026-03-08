@@ -1,13 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import type { Currency } from "../types/Currency";
-
-type CurrencyAPIResponse = {
-  meta: {
-    code: number;
-    disclaimer: string;
-  };
-  response: Currency[];
-};
+import type { Currency, CurrencyAPIResponse } from "../types/Currency";
 
 export default function useFetchCurrencies() {
   const [currencies, setCurrencies] = useState<Currency[]>([]);

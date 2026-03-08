@@ -1,13 +1,18 @@
 import { Button } from "@carbon/react";
 import { ArrowsHorizontal } from "@carbon/icons-react";
 
-export function SwapButton({ onClick, hidden }: { onClick?: () => void, hidden?: boolean }) {
+interface SwapButtonProps {
+  onClick?: () => void;
+  hidden?: boolean;
+}
+
+export function SwapButton({ onClick, hidden }: SwapButtonProps) {
   return (
     <Button
       kind="ghost"
       style={{ visibility: hidden ? "hidden" : "visible" }}
       renderIcon={ArrowsHorizontal}
-      iconDescription="Swap currency control"
+      iconDescription="Swap currencies"
       onClick={onClick}
     />
   );

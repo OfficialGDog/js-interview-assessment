@@ -11,7 +11,7 @@
 .selectContainer {
   display: flex;
   gap: 10px;
-  padding-bottom: "8px";
+  padding-top: 8px;
 }
 
 .inputContainer {
@@ -21,4 +21,8 @@
 
 .alignEnd {
   align-self: end;
+}
+
+.alignLeft {
+  text-align: left;
 }

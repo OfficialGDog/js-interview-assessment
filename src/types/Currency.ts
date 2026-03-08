@@ -10,3 +10,25 @@ export type Currency = {
   decimal_mark: string;
   thousands_separator: string;
 };
+
+export type CurrencyMeta = {
+  code: number;
+  disclaimer: string;
+};
+
+export type CurrencyAPIResponse = {
+  meta: CurrencyMeta;
+  response: Currency[];
+};
+
+export type ConvertAPIResponse = {
+  meta: CurrencyMeta;
+  response: {
+    timestamp: number;
+    date: string;
+    from: string;
+    to: string;
+    amount: number;
+    value: number;
+  };
+};

@@ -5,9 +5,10 @@ import { CurrencyInput } from "./components/CurrencyInput/CurrencyInput";
 import { SwapButton } from "./components/SwapButton/SwapButton";
 import { useDebounce } from "./hooks/useDebounce";
 import useFetchCurrencies from "./hooks/useFetchCurrencies";
-import useCurrencyConversion from "./hooks/useConvert";
+import convertCurrency from "./services/convertCurrency";
+import { getName } from "./utils/getName";
 import type { ConverterState } from "./types/ConverterState";
-import styles from "./App.module.css"; // Import the CSS module
+import styles from "./App.module.css";
 
 function App() {
   const [converter, setConverter] = useState<ConverterState>({
@@ -27,10 +28,8 @@ function App() {
     event: React.ChangeEvent<HTMLSelectElement>,
   ) => {
     const { id, value } = event.target;
-
     if ((id === "fromCurrency" && converter.toCurrency !== value) ||
-      (id === "toCurrency" && converter.fromCurrency !== value)
-    ) {
+      (id === "toCurrency" && converter.fromCurrency !== value)) {
       setConverter((prev) => ({ ...prev, [id]: value }));
     }
   };
@@ -54,7 +53,7 @@ function App() {
     if (!loading && fromCurrency === newFrom && toCurrency === newTo && fromAmount === newAmount) return;
 
     const fetchConversion = async () => {
-      const { result } = await useCurrencyConversion(newFrom, newTo, newAmount);
+      const { result } = await convertCurrency(newFrom, newTo, newAmount);
       setConverter((prev) => ({ ...prev, toAmount: result.toFixed(2) }));
       prevFiltersRef.current = debouncedFilters;
     };
@@ -66,13 +65,18 @@ function App() {
   return (
     <div className={styles.wrapper}>
       <div>
+        <div className={styles.alignLeft}>
+          <h1>{converter.fromAmount} {getName(currencies, converter.fromCurrency)} =</h1>
+          <h2>{converter.toAmount} {getName(currencies, converter.toCurrency)}</h2>
+        </div>
+        <div className={styles.selectContainer}>
         {loading ? (
-          <div className={styles.selectContainer}>
+          <>
             <SelectSkeleton />
             <SelectSkeleton />
-          </div>
+          </>
         ) : (
-          <div className={styles.selectContainer}>
+          <>
             <CurrencySelect
               id="fromCurrency"
               label="From"
@@ -90,9 +94,9 @@ function App() {
               currencyList={currencies}
               onChange={handleCurrencyChange}
             />
-          </div>
+          </>
         )}
-
+        </div>
         <div className={styles.inputContainer}>
           <CurrencyInput
             id="fromAmount"
