@@ -1,5 +1,5 @@
 import { SelectSkeleton } from "@carbon/react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { CurrencySelect } from "./components/CurrencySelect/CurrencySelect";
 import { CurrencyInput } from "./components/CurrencyInput/CurrencyInput";
 import { SwapButton } from "./components/SwapButton/SwapButton";
@@ -12,17 +12,21 @@ import styles from "./App.module.css";
 
 function App() {
   const [converter, setConverter] = useState<ConverterState>({
-    fromCurrency: "GBP",
-    toCurrency: "JPY",
+    fromCurrency: import.meta.env.VITE_FROM_CURRENCY || "GBP",
+    toCurrency: import.meta.env.VITE_TO_CURRENCY || "JPY",
     fromAmount: 1,
     toAmount: 212,
   });
 
   const { currencies, loading } = useFetchCurrencies();
 
-  const debouncedFilters = useDebounce(converter, 500);
+  const filters = useMemo(() => ({
+    fromCurrency: converter.fromCurrency,
+    toCurrency: converter.toCurrency,
+    fromAmount: converter.fromAmount
+  }), [converter.fromCurrency, converter.toCurrency, converter.fromAmount]);
 
-  const prevFiltersRef = useRef(debouncedFilters);
+  const debouncedFilters = useDebounce(filters, 500);
 
   const handleCurrencyChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -47,18 +51,19 @@ function App() {
   };
 
   useEffect(() => {
-    const { fromCurrency, toCurrency, fromAmount } = prevFiltersRef.current;
-    const { fromCurrency: newFrom, toCurrency: newTo, fromAmount: newAmount } = debouncedFilters;
+    if(loading) return;
 
-    if (!loading && fromCurrency === newFrom && toCurrency === newTo && fromAmount === newAmount) return;
+    const controller = new AbortController();
 
     const fetchConversion = async () => {
-      const { result } = await convertCurrency(newFrom, newTo, newAmount);
+      const { fromCurrency, toCurrency, fromAmount } = debouncedFilters;
+      const { result } = await convertCurrency(fromCurrency, toCurrency, fromAmount, controller.signal);
       setConverter((prev) => ({ ...prev, toAmount: result.toFixed(2) }));
-      prevFiltersRef.current = debouncedFilters;
     };
 
     fetchConversion();
+    
+    return () => controller.abort();
 
   }, [debouncedFilters, loading]);
 

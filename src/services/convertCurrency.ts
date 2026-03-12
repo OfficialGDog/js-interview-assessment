@@ -8,6 +8,7 @@ const convertCurrency = async (
   from: string,
   to: string,
   amount: string | number,
+  signal?: AbortSignal
 ): Promise<ConversionResult> => {
   try {
     const response = await fetch(
@@ -16,6 +17,7 @@ const convertCurrency = async (
         headers: {
           Authorization: `Bearer ${import.meta.env.VITE_API_KEY}`,
         },
+        signal
       },
     );
 

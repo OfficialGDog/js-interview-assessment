@@ -1,7 +1,7 @@
 import { Select, SelectItem } from "@carbon/react";
 import type { Currency } from "../../types/Currency";
 
-interface CurrencySelectProps {
+type CurrencySelectProps = {
   id: string;
   label: string;
   value: string;

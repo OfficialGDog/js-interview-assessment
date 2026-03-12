@@ -1,6 +1,6 @@
 import { NumberInput } from "@carbon/react";
 
-interface CurrencyInputProps {
+type CurrencyInputProps = {
   id: string;
   label: string;
   value: string | number;

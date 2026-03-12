@@ -1,7 +1,7 @@
 import { Button } from "@carbon/react";
 import { ArrowsHorizontal } from "@carbon/icons-react";
 
-interface SwapButtonProps {
+type SwapButtonProps = {
   onClick?: () => void;
   hidden?: boolean;
 }
